@@ -1,0 +1,7 @@
+[project]
+name = "composer"
+version = "0.1.0"
+description = "Manage Docker Compose stacks."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
