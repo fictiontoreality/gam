@@ -12,6 +12,13 @@ Usage:
     composer search <term>
     composer autostart
     composer validate
+    composer tag list
+    composer tag add <stack> <tag> [<tag> ...]
+    composer tag remove <stack> <tag> [<tag> ...]
+    composer tag rename <old-tag> <new-tag>
+    composer category list
+    composer category set <stack> <category> [subcategory]
+    composer category rename <old-category> <new-category>
 """
 
 import os
@@ -62,6 +69,39 @@ class Stack:
                 for key, value in meta.items():
                     if hasattr(self, key):
                         setattr(self, key, value)
+
+    def save_metadata(self) -> None:
+        """Save metadata to .stack-meta.yaml"""
+        # Build metadata dict from current values
+        meta = {
+            'name': self.name,
+            'description': self.description,
+            'category': self.category,
+            'tags': self.tags,
+            'auto_start': self.auto_start,
+            'priority': self.priority,
+            'restart_policy': self.restart_policy,
+        }
+
+        # Add optional fields if set
+        if self.subcategory:
+            meta['subcategory'] = self.subcategory
+        if self.depends_on:
+            meta['depends_on'] = self.depends_on
+        if self.expected_containers:
+            meta['expected_containers'] = self.expected_containers
+        if self.critical:
+            meta['critical'] = self.critical
+        if self.owner:
+            meta['owner'] = self.owner
+        if self.documentation:
+            meta['documentation'] = self.documentation
+        if self.health_check_url:
+            meta['health_check_url'] = self.health_check_url
+
+        # Write to file
+        with open(self.meta_file, 'w') as f:
+            yaml.dump(meta, f, default_flow_style=False, sort_keys=False)
 
     def get_status(self) -> Dict:
         """Get running status using docker compose ps"""
@@ -192,6 +232,42 @@ class StackManager:
                 deps.extend(self.resolve_dependencies(dep_stack))
                 deps.append(dep_stack)
         return deps
+
+    def get_all_tags(self) -> List[str]:
+        """Get all unique tags across all stacks"""
+        tags = set()
+        for stack in self.stacks.values():
+            tags.update(stack.tags)
+        return sorted(tags)
+
+    def get_all_categories(self) -> List[tuple]:
+        """Get all unique categories (category, subcategory) tuples"""
+        categories = set()
+        for stack in self.stacks.values():
+            categories.add((stack.category, stack.subcategory))
+        return sorted(categories)
+
+    def rename_tag(self, old_tag: str, new_tag: str) -> int:
+        """Rename a tag across all stacks. Returns count of affected stacks."""
+        count = 0
+        for stack in self.stacks.values():
+            if old_tag in stack.tags:
+                stack.tags.remove(old_tag)
+                if new_tag not in stack.tags:
+                    stack.tags.append(new_tag)
+                stack.save_metadata()
+                count += 1
+        return count
+
+    def rename_category(self, old_category: str, new_category: str) -> int:
+        """Rename a category across all stacks. Returns count of affected stacks."""
+        count = 0
+        for stack in self.stacks.values():
+            if stack.category == old_category:
+                stack.category = new_category
+                stack.save_metadata()
+                count += 1
+        return count
 
 
 def cmd_list(manager: StackManager, args) -> None:
@@ -400,6 +476,104 @@ def cmd_validate(manager: StackManager, args) -> None:
         print("✓ All stacks valid")
 
 
+def cmd_tag(manager: StackManager, args) -> None:
+    """Tag management commands"""
+    if args.tag_action == 'list':
+        tags = manager.get_all_tags()
+        if not tags:
+            print("No tags found")
+            return
+
+        print(f"\nFound {len(tags)} unique tag(s):\n")
+        for tag in tags:
+            # Count how many stacks use this tag
+            count = sum(1 for s in manager.stacks.values() if tag in s.tags)
+            print(f"  • {tag} ({count} stack{'s' if count != 1 else ''})")
+
+    elif args.tag_action == 'add':
+        stack = manager.get_stack(args.stack)
+        if not stack:
+            print(f"Stack '{args.stack}' not found")
+            sys.exit(1)
+
+        added = []
+        for tag in args.tags:
+            if tag not in stack.tags:
+                stack.tags.append(tag)
+                added.append(tag)
+
+        if added:
+            stack.save_metadata()
+            print(f"✓ Added tag(s) to {stack.name}: {', '.join(added)}")
+        else:
+            print(f"All specified tags already exist on {stack.name}")
+
+    elif args.tag_action == 'remove':
+        stack = manager.get_stack(args.stack)
+        if not stack:
+            print(f"Stack '{args.stack}' not found")
+            sys.exit(1)
+
+        removed = []
+        for tag in args.tags:
+            if tag in stack.tags:
+                stack.tags.remove(tag)
+                removed.append(tag)
+
+        if removed:
+            stack.save_metadata()
+            print(f"✓ Removed tag(s) from {stack.name}: {', '.join(removed)}")
+        else:
+            print(f"None of the specified tags were found on {stack.name}")
+
+    elif args.tag_action == 'rename':
+        count = manager.rename_tag(args.old_tag, args.new_tag)
+        if count > 0:
+            print(f"✓ Renamed '{args.old_tag}' to '{args.new_tag}' across {count} stack{'s' if count != 1 else ''}")
+        else:
+            print(f"Tag '{args.old_tag}' not found on any stacks")
+
+
+def cmd_category(manager: StackManager, args) -> None:
+    """Category management commands"""
+    if args.category_action == 'list':
+        categories = manager.get_all_categories()
+        if not categories:
+            print("No categories found")
+            return
+
+        print(f"\nFound {len(categories)} unique categor{'ies' if len(categories) != 1 else 'y'}:\n")
+        for category, subcategory in categories:
+            # Count how many stacks use this category
+            count = sum(1 for s in manager.stacks.values()
+                       if s.category == category and s.subcategory == subcategory)
+
+            display = f"{category}/{subcategory}" if subcategory else category
+            print(f"  • {display} ({count} stack{'s' if count != 1 else ''})")
+
+    elif args.category_action == 'set':
+        stack = manager.get_stack(args.stack)
+        if not stack:
+            print(f"Stack '{args.stack}' not found")
+            sys.exit(1)
+
+        old_category = f"{stack.category}/{stack.subcategory}" if stack.subcategory else stack.category
+
+        stack.category = args.new_category
+        stack.subcategory = args.subcategory or ""
+        stack.save_metadata()
+
+        new_category = f"{stack.category}/{stack.subcategory}" if stack.subcategory else stack.category
+        print(f"✓ Changed category for {stack.name}: {old_category} → {new_category}")
+
+    elif args.category_action == 'rename':
+        count = manager.rename_category(args.old_category, args.new_category)
+        if count > 0:
+            print(f"✓ Renamed category '{args.old_category}' to '{args.new_category}' across {count} stack{'s' if count != 1 else ''}")
+        else:
+            print(f"Category '{args.old_category}' not found on any stacks")
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Docker Compose Stack Manager",
@@ -449,6 +623,46 @@ def main():
     # validate
     subparsers.add_parser('validate', help='Validate stack metadata')
 
+    # tag
+    tag_parser = subparsers.add_parser('tag', help='Manage tags')
+    tag_subparsers = tag_parser.add_subparsers(dest='tag_action', help='Tag actions')
+
+    # tag list
+    tag_subparsers.add_parser('list', help='List all unique tags')
+
+    # tag add
+    tag_add_parser = tag_subparsers.add_parser('add', help='Add tag(s) to a stack')
+    tag_add_parser.add_argument('stack', help='Stack name')
+    tag_add_parser.add_argument('tags', nargs='+', help='Tag(s) to add')
+
+    # tag remove
+    tag_remove_parser = tag_subparsers.add_parser('remove', help='Remove tag(s) from a stack')
+    tag_remove_parser.add_argument('stack', help='Stack name')
+    tag_remove_parser.add_argument('tags', nargs='+', help='Tag(s) to remove')
+
+    # tag rename
+    tag_rename_parser = tag_subparsers.add_parser('rename', help='Rename a tag across all stacks')
+    tag_rename_parser.add_argument('old_tag', help='Old tag name')
+    tag_rename_parser.add_argument('new_tag', help='New tag name')
+
+    # category
+    category_parser = subparsers.add_parser('category', help='Manage categories')
+    category_subparsers = category_parser.add_subparsers(dest='category_action', help='Category actions')
+
+    # category list
+    category_subparsers.add_parser('list', help='List all unique categories')
+
+    # category set
+    category_set_parser = category_subparsers.add_parser('set', help='Set category for a stack')
+    category_set_parser.add_argument('stack', help='Stack name')
+    category_set_parser.add_argument('new_category', help='Category name')
+    category_set_parser.add_argument('subcategory', nargs='?', help='Subcategory name (optional)')
+
+    # category rename
+    category_rename_parser = category_subparsers.add_parser('rename', help='Rename a category across all stacks')
+    category_rename_parser.add_argument('old_category', help='Old category name')
+    category_rename_parser.add_argument('new_category', help='New category name')
+
     args = parser.parse_args()
 
     if not args.command:
@@ -469,6 +683,8 @@ def main():
         'search': cmd_search,
         'autostart': cmd_autostart,
         'validate': cmd_validate,
+        'tag': cmd_tag,
+        'category': cmd_category,
     }
 
     commands[args.command](manager, args)

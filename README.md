@@ -5,15 +5,15 @@ A metadata-driven management tool for organizing and controlling multiple Docker
 ## Features
 
 1. **Metadata-Based Organization** - Organize stacks with categories, tags, and custom fields using simple YAML files.
-2. **Priority-Based Startup** - Start stacks in defined order with configurable priority levels.
-3. **Dependency Management** - Automatically resolve and start stack dependencies in correct order.
-4. **Auto-Start on Boot** - Mark stacks for automatic startup with systemd integration.
-5. **Bulk Operations** - Start/stop all stacks, by category, or by tag with single commands.
-6. **Status Dashboard** - View running status and container counts across all stacks at a glance.
-7. **Search & Discovery** - Find stacks by name, description, or tags across your entire infrastructure.
-8. **Git-Friendly** - All configuration in version-controllable YAML files, no database required.
-9. **Non-Invasive** - Works alongside existing docker-compose.yml files without modification.
-10. **Validation** - Verify metadata integrity and check for missing dependencies before deployment.
+1. **Priority-Based Startup** - Start stacks in defined order with configurable priority levels.
+1. **Dependency Management** - Automatically resolve and start stack dependencies in correct order.
+1. **Auto-Start on Boot** - Mark stacks for automatic startup with systemd integration.
+1. **Bulk Operations** - Start/stop all stacks, by category, or by tag with single commands.
+1. **Status Dashboard** - View running status and container counts across all stacks at a glance.
+1. **Search & Discovery** - Find stacks by name, description, or tags across your entire infrastructure.
+1. **Git-Friendly** - All configuration in version-controllable YAML files, no database required.
+1. **Non-Invasive** - Works alongside existing docker-compose.yml files without modification.
+1. **Validation** - Verify metadata integrity and check for missing dependencies before deployment.
 
 ## Why
 
@@ -136,6 +136,18 @@ health_check_url: http://localhost:8080/health
 
 # Validate all metadata
 ./composer validate
+
+# Tag Management
+./composer tag list                              # List all tags
+./composer tag add video-transcoding production   # Add tag(s) to a stack
+./composer tag remove web-blog staging           # Remove tag(s) from a stack
+./composer tag rename production prod             # Rename tag across all stacks
+
+# Category Management
+./composer category list                                    # List all categories
+./composer category set web-blog application frontend       # Set category/subcategory
+./composer category set data-redis database                 # Set category only
+./composer category rename data database                    # Rename category across all stacks
 ```
 
 ## Next Steps
@@ -160,11 +172,19 @@ priority: 2
 EOF
 ```
 
+Alternatively, use the CLI to manage metadata:
+```bash
+composer tag add video-transcoding media production
+composer category set video-transcoding video processing
+```
+
 3. **Test it:**
 ```bash
 composer list
 composer show video-transcoding
 composer status
+composer tag list
+composer category list
 ```
 
 4. **Set up autostart (optional):**
@@ -192,11 +212,10 @@ sudo systemctl enable docker-autostart
 
 Once you have the basics working, you can add:
 
-0. **Tag/Category Management:** list, add, remove, rename tags/categories
 1. **Web UI:** Simple Flask/FastAPI dashboard
 2. **Webhooks:** Trigger from Git commits
 3. **Health checks:** Monitor stack health
-4. **Logs:** `composer logs <stack>` 
+4. **Logs:** `composer logs <stack>`
 5. **Export:** Generate reports, integrate with monitoring
 6. **Backup:** `composer backup <stack>` for volumes
 7. **Template generation:** Create new stacks from templates
