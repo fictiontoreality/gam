@@ -150,15 +150,42 @@ health_check_url: http://localhost:8080/health
 ./composer category rename data database                    # Rename category across all stacks
 ```
 
-## Next Steps
+## Installation
 
-1. **Install the script:**
+Install using pip, pipx, or uv:
+
 ```bash
-chmod +x composer
-sudo ln -s $(pwd)/composer /usr/local/bin/composer
+# Using pip (system-wide)
+pip install docker-composer
+
+# Using pipx (isolated environment, recommended)
+pipx install docker-composer
+
+# Using uv (fast, modern)
+uv tool install docker-composer
 ```
 
-2. **Create metadata files:**
+Once installed, the `composer` command will be available system-wide.
+
+### Development Installation
+
+For development or local testing:
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/composer.git
+cd composer
+
+# Install in editable mode
+pip install -e .
+
+# Or with pipx
+pipx install -e .
+```
+
+## Getting Started
+
+1. **Create metadata files:**
 ```bash
 # For each stack directory
 cd video/transcoding
@@ -178,7 +205,7 @@ composer tag add video-transcoding media production
 composer category set video-transcoding video processing
 ```
 
-3. **Test it:**
+2. **Test it:**
 ```bash
 composer list
 composer show video-transcoding
@@ -187,7 +214,7 @@ composer tag list
 composer category list
 ```
 
-4. **Set up autostart (optional):**
+3. **Set up autostart (optional):**
 ```bash
 # Create systemd service
 sudo cat > /etc/systemd/system/docker-autostart.service <<EOF
@@ -200,6 +227,7 @@ Requires=docker.service
 Type=oneshot
 ExecStart=/usr/local/bin/composer autostart
 RemainAfterExit=yes
+# Note: Update the path above to match where composer is installed (run 'which composer' to find it)
 
 [Install]
 WantedBy=multi-user.target

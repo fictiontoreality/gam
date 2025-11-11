@@ -12,17 +12,27 @@ The tool is designed to be non-invasive (doesn't modify docker-compose.yml files
 
 ### Running the Tool
 
-```bash
-# Make the script executable (first time only)
-chmod +x main.py
+The tool is packaged as a proper Python package and can be installed via pip/pipx/uv:
 
-# Run commands
-./main.py list
-./main.py show <stack-name>
-./main.py up <stack-name>
-./main.py down <stack-name>
-./main.py status
-./main.py validate
+```bash
+# Install in development mode
+pip install -e .
+
+# Run commands (after installation)
+composer list
+composer show <stack-name>
+composer up <stack-name>
+composer down <stack-name>
+composer status
+composer validate
+composer tag list
+composer category list
+```
+
+Alternatively, run directly from source:
+
+```bash
+python -m composer.cli list
 ```
 
 ### Testing
@@ -33,6 +43,24 @@ The project currently has no automated tests. When testing changes manually:
 2. Add .stack-meta.yaml files with test metadata
 3. Run commands against test stacks to verify behavior
 4. Test edge cases: missing metadata files, broken dependencies, non-existent stacks
+
+## Package Structure
+
+The project follows modern Python packaging conventions:
+
+```
+composer/
+├── pyproject.toml          # Package metadata and dependencies
+├── README.md               # User documentation
+├── CLAUDE.md              # Developer documentation
+├── main.py                # Legacy entry point (kept for compatibility)
+└── src/
+    └── composer/
+        ├── __init__.py    # Package initialization
+        └── cli.py         # Main CLI implementation
+```
+
+**Entry Points**: The package defines a console script entry point `composer` that maps to `composer.cli:main`, making the command available system-wide after installation.
 
 ## Architecture
 
@@ -96,11 +124,13 @@ health_check_url: http://localhost:8080/health
 
 All fields are optional except `name`. The tool is extensible - custom fields can be added without code changes.
 
-## Working with Dependencies
+## Dependencies
 
-- Python 3.10+ (uses dataclass features, type hints)
-- Standard library only: yaml, subprocess, pathlib, argparse
-- No external dependencies to install
+- **Python 3.10+** (uses dataclass features, type hints)
+- **PyYAML** (>=6.0) - Only external dependency, used for YAML parsing
+- **Standard library**: subprocess, pathlib, argparse, dataclasses
+
+The package intentionally keeps dependencies minimal for easy installation and maintenance.
 
 ## Directory Assumptions
 
