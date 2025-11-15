@@ -16,7 +16,7 @@ The tool is packaged as a proper Python package and can be installed via pip/pip
 
 ```bash
 # Install in development mode
-pip install -e .
+uv pip install -e .
 
 # Run commands (after installation)
 composer ls                     # List all stacks
@@ -61,7 +61,40 @@ python -m composer.cli list
 
 ### Testing
 
-The project currently has no automated tests. When testing changes manually:
+The project includes comprehensive unit tests using pytest.
+
+**Running Tests:**
+```bash
+# Install test dependencies
+uv pip install -e ".[test]"
+
+# Run all tests
+uv run pytest
+
+# Run with coverage report
+uv run pytest --cov=src/composer --cov-report=term-missing
+
+# Run specific test file
+uv run pytest test/unit/test_ls.py
+
+# Run specific test
+uv run pytest test/unit/test_ls.py::TestLsCommand::test_ls_all_stacks
+```
+
+**Test Structure:**
+```
+test/
+├── conftest.py              # Shared fixtures
+└── unit/
+    ├── test_ls.py           # Tests for ls/list command
+    ├── test_up_down_restart.py    # Tests for up/down/restart
+    ├── test_show_status_search.py # Tests for show/status/search
+    ├── test_tag_category.py       # Tests for tag/category
+    └── test_autostart_validate.py # Tests for autostart/validate
+```
+
+**Manual Testing:**
+When testing changes manually:
 
 1. Create test stack directories with docker-compose.yml files
 2. Add .stack-meta.yaml files with test metadata
