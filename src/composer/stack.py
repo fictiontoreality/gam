@@ -1,7 +1,6 @@
 import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Optional
 
 import yaml
 
@@ -12,11 +11,11 @@ class Stack:
     path: Path
     category: str = "uncategorized"
     subcategory: str = ""
-    tags: List[str] = field(default_factory=list)
+    tags: list[str] = field(default_factory=list)
     description: str = ""
     auto_start: bool = False
     priority: int = 5
-    depends_on: List[str] = field(default_factory=list)
+    depends_on: list[str] = field(default_factory=list)
     expected_containers: int = 0
     critical: bool = False
     owner: str = ""
@@ -79,7 +78,7 @@ class Stack:
             yaml.dump(meta, f, default_flow_style=False,
                       sort_keys=False, indent=2)
 
-    def get_status(self) -> Dict:
+    def get_status(self) -> dict:
         """Get running status using docker compose ps."""
         try:
             result = subprocess.run(

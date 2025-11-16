@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-from typing import Dict, List, Optional
 
 from composer.stack import Stack
 
@@ -9,7 +8,7 @@ class StackManager:
 
     def __init__(self, root_dir: Path = Path.cwd()):
         self.root_dir = root_dir
-        self.stacks: Dict[str, Stack] = {}
+        self.stacks: dict[str, Stack] = {}
         self.discover_stacks()
 
     def discover_stacks(self) -> None:
@@ -32,9 +31,9 @@ class StackManager:
 
     def list_stacks(
         self,
-        category: Optional[str] = None,
-        tag: Optional[str] = None
-    ) -> List[Stack]:
+        category: str | None = None,
+        tag: str | None = None
+    ) -> list[Stack]:
         """List stacks with optional filtering."""
         stacks = list(self.stacks.values())
 
@@ -46,15 +45,15 @@ class StackManager:
 
         return sorted(stacks, key=lambda s: (s.priority, s.category, s.name))
 
-    def get_stack(self, name: str) -> Optional[Stack]:
+    def get_stack(self, name: str) -> Stack | None:
         """Get stack by name."""
         return self.stacks.get(name)
 
-    def get_category_stacks(self, category: str) -> List[Stack]:
+    def get_category_stacks(self, category: str) -> list[Stack]:
         """Get all stacks in a category."""
         return [s for s in self.stacks.values() if s.category == category]
 
-    def search(self, term: str) -> List[Stack]:
+    def search(self, term: str) -> list[Stack]:
         """Search stacks by name, description, and tags."""
         term_lower = term.lower()
         results = []
@@ -65,12 +64,12 @@ class StackManager:
                 results.append(stack)
         return results
 
-    def get_autostart_stacks(self) -> List[Stack]:
+    def get_autostart_stacks(self) -> list[Stack]:
         """Get stacks with auto_start=true, sorted by priority."""
         stacks = [s for s in self.stacks.values() if s.auto_start]
         return sorted(stacks, key=lambda s: s.priority)
 
-    def resolve_dependencies(self, stack: Stack) -> List[Stack]:
+    def resolve_dependencies(self, stack: Stack) -> list[Stack]:
         """Get dependency chain for a stack."""
         deps = []
         for dep_name in stack.depends_on:
@@ -81,14 +80,14 @@ class StackManager:
                 deps.append(dep_stack)
         return deps
 
-    def get_all_tags(self) -> List[str]:
+    def get_all_tags(self) -> list[str]:
         """Get all unique tags across all stacks."""
         tags = set()
         for stack in self.stacks.values():
             tags.update(stack.tags)
         return sorted(tags)
 
-    def get_all_categories(self) -> List[tuple]:
+    def get_all_categories(self) -> list[tuple]:
         """Get all unique categories (category, subcategory) tuples."""
         categories = set()
         for stack in self.stacks.values():
