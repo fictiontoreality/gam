@@ -1,0 +1,144 @@
+TODO for release.
+
+* Top Priority Items
+Get these done if nothing else.
+
+** TODO Setup GitHub Actions CI/CD
+Create =.github/workflows/ci.yml=:
+- Run tests on multiple Python versions (3.10, 3.11, 3.12)
+- Run tests on multiple OSes (ubuntu, macos, windows)
+- Check code coverage
+- Lint with ruff/black
+- Type checking with mypy (if you add type hints)
+** TODO Create CHANGELOG.md
+Follow [[https://keepachangelog.com/][Keep a Changelog]] format. For v0.1.0, document all features.
+** TODO Add screenshots/demo GIF to README
+   Show:
+   - =composer list= output with colors
+   - Status dashboard
+   - Real-world usage example
+   Tools: asciinema, terminalizer, or screenshots
+
+** TODO PyPI Package Quality
+*** TODO Test PyPI upload first
+   Before publishing to real PyPI:
+   #+begin_src bash
+   # Upload to test.pypi.org first
+   python -m build
+   twine upload --repository testpypi dist/*
+   # Test installation from test PyPI
+   pip install --index-url https://test.pypi.org/simple/ docker-composer
+   #+end_src
+
+*** TODO Verify package metadata
+   - [X] Classifiers
+   - [X] Keywords
+   - [X] Project URLs
+   - [ ] Consider adding: Documentation, Changelog URLs
+
+*** TODO Document version strategy
+   - Will you use semantic versioning?
+   - How will you handle breaking changes?
+** TODO Create SECURITY.md
+   Security policy:
+   - How to report vulnerabilities
+   - Supported versions
+   - Security update policy
+* Core Release Tasks
+** TODO review all code once more
+** TODO test for a week in the wild
+** TODO revamp README
+*** TODO restructure for humans
+*** TODO document all commands
+** TODO publish package on pypi
+** TODO push everything to github
+** TODO make release announcements
+
+* Documentation & User Experience
+** TODO Create CONTRIBUTING.md
+   - How to report bugs/request features
+   - Development setup instructions
+   - How to run tests
+   - Code style guidelines
+   - PR process
+** TODO Create architecture diagram
+Visual representation of how StackManager, Stack, and commands interact.
+** TODO Write blog post / case study
+Write about:
+- Problem you solved
+- Design decisions (why dataclass? why no database?)
+- Challenges overcome (e.g., the Path.cwd() default argument bug!)
+- What you learned
+- Architecture evolution
+** TODO Show usage examples
+Create example repository showing:
+- Example stack setup
+- .stack-meta.yaml examples
+- Complete workflow from setup to management
+** TODO Create roadmap document
+Shows project has longevity.
+* GitHub Repository Setup
+** TODO Add GitHub topics
+Topics for discoverability: docker, docker-compose, devops, python, cli, container-management
+** TODO Add repository badges to README
+- PyPI version badge
+- Python version badge
+- License badge
+- CI status badge
+- Test coverage badge (codecov.io or coveralls)
+** TODO Create issue templates
+Create =.github/ISSUE_TEMPLATE/=:
+- Bug report template
+- Feature request template
+- Question template
+* Code Quality & Testing
+** TODO Multi-platform testing
+Mention this has only been tested on Linux, but should work on MacOS. Unsure about Windows.
+** TODO Python version testing
+Verify on 3.10, 3.11, 3.12 (versions claimed in pyproject.toml)
+** TODO Setup linting
+   Add to pyproject.toml:
+   #+begin_src toml
+   [tool.ruff]
+   # or [tool.black] for formatting
+   #+end_src
+   Shows code quality standards.
+
+** TODO Add comprehensive type hints
+If not already complete:
+- Run mypy to verify
+- Demonstrates modern Python practices
+** TODO Add security scanning
+Add to CI:
+- =pip-audit= for dependency vulnerabilities
+- =bandit= for code security issues
+* Release Process
+** TODO Create git tag
+   #+begin_src bash
+   git tag -a v0.1.0 -m "Initial release"
+   git push origin v0.1.0
+   #+end_src
+
+** TODO Create GitHub Release
+   Create GitHub release with:
+   - Release notes from CHANGELOG
+   - Binary distributions attached (wheels)
+* Pre-Release Checklist
+** TODO Verify all tests pass on all platforms
+** TODO Verify documentation is complete and accurate
+** TODO Verify CHANGELOG is up to date
+** TODO Verify version numbers are correct
+** TODO Verify no sensitive data in repository
+** TODO Verify git tags are created
+** TODO Verify test PyPI upload works
+* Post-Release
+** TODO Announce on multiple venues
+- Reddit: r/docker, r/selfhosted, r/Python
+- Hacker News (Show HN)
+- Dev.to article
+- Python weekly newsletter?
+- Docker community forums?
+** TODO Setup package monitoring
+- PyPI downloads tracking
+- GitHub stars/forks tracking
+- Issue/PR response plan
