@@ -3,23 +3,22 @@
 composer - Docker Compose Stack Manager with Metadata Support
 
 Usage:
-    composer ls [-c|--category=CAT] [-t|--tag=TAG]
-    composer list [-c|--category=CAT] [-t|--tag=TAG]  (alias for ls)
-    composer show <stack>
-    composer up <stack|--all> [-c CAT] [-t TAG] [--priority]
-    composer down <stack|--all> [-c CAT] [-t TAG]
-    composer restart <stack|--all> [-c CAT] [-t TAG]
-    composer status [-c|--category=CAT]
-    composer search <term>
     composer autostart
-    composer validate
-    composer tag list
+    composer category list
+    composer category rename <old-category> <new-category>
+    composer category set <stack> <category> [subcategory]
+    composer down <stack|--all> [-c CAT] [-t TAG]
+    composer ls [-c|--category=CAT] [-t|--tag=TAG]
+    composer restart <stack|--all> [-c CAT] [-t TAG]
+    composer search <term>
+    composer show <stack>
+    composer status [-c|--category=CAT] [-t|--tag=TAG]
     composer tag add <stack> <tag> [<tag> ...]
+    composer tag ls
     composer tag remove <stack> <tag> [<tag> ...]
     composer tag rename <old-tag> <new-tag>
-    composer category list
-    composer category set <stack> <category> [subcategory]
-    composer category rename <old-category> <new-category>
+    composer up <stack|--all> [-c CAT] [-t TAG] [--priority]
+    composer validate [<stack>]
 """
 
 import argparse
@@ -120,6 +119,7 @@ def main():
     status_parser.add_argument(
         '-c', '--category', help='Filter by category'
     )
+    status_parser.add_argument('-t', '--tag', help='Filter by tag')
 
     # search
     search_parser = subparsers.add_parser('search', help='Search stacks')
@@ -129,7 +129,10 @@ def main():
     subparsers.add_parser('autostart', help='Start all auto-start stacks')
 
     # validate
-    subparsers.add_parser('validate', help='Validate stack metadata')
+    validate_parser = subparsers.add_parser('validate', help='Validate stack metadata')
+    validate_parser.add_argument(
+        'target', nargs='?', help='Stack name or category'
+    )
 
     # tag
     tag_parser = subparsers.add_parser('tag', help='Manage tags')
@@ -138,7 +141,9 @@ def main():
     )
 
     # tag list
-    tag_subparsers.add_parser('list', help='List all unique tags')
+    tag_subparsers.add_parser(
+        'ls', aliases=['list'], help='List all unique tags'
+    )
 
     # tag add
     tag_add_parser = tag_subparsers.add_parser(
@@ -165,7 +170,7 @@ def main():
 
     # category
     category_parser = subparsers.add_parser(
-        'category', help='Manage categories'
+        'category', aliases=['cat'], help='Manage categories'
     )
     category_subparsers = category_parser.add_subparsers(
         dest='category_action', help='Category actions'
@@ -173,7 +178,7 @@ def main():
 
     # category list
     category_subparsers.add_parser(
-        'list', help='List all unique categories'
+        'ls', aliases=['list'], help='List all unique categories'
     )
 
     # category set
@@ -208,18 +213,19 @@ def main():
 
     # Dispatch to command
     commands = {
-        'ls': cmd_ls,
-        'list': cmd_ls,  # Alias for ls
-        'show': cmd_show,
-        'up': cmd_up,
-        'down': cmd_down,
-        'restart': cmd_restart,
-        'status': cmd_status,
-        'search': cmd_search,
         'autostart': cmd_autostart,
-        'validate': cmd_validate,
-        'tag': cmd_tag,
         'category': cmd_category,
+        'cat': cmd_category, # Alias for category
+        'down': cmd_down,
+        'list': cmd_ls,  # Alias for ls
+        'ls': cmd_ls,
+        'restart': cmd_restart,
+        'search': cmd_search,
+        'show': cmd_show,
+        'status': cmd_status,
+        'tag': cmd_tag,
+        'up': cmd_up,
+        'validate': cmd_validate,
     }
 
     commands[args.command](manager, args)

@@ -18,6 +18,19 @@ def test_tag_list(clean_stacks, capsys):
     assert "frontend" in captured.out
 
 
+def test_tag_ls_alias(clean_stacks, capsys):
+    """Test that 'ls' works as alias for 'list'."""
+    args = Namespace(tag_action='ls')
+    cmd_tag(clean_stacks, args)
+
+    captured = capsys.readouterr()
+    assert "dev" in captured.out
+    assert "testing" in captured.out
+    assert "prod" in captured.out
+    assert "backend" in captured.out
+    assert "frontend" in captured.out
+
+
 def test_tag_add(clean_stacks, capsys):
     """Test adding tags to a stack."""
     args = Namespace(

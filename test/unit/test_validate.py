@@ -1,7 +1,9 @@
 """Tests for validate command."""
 
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, mock_open, patch
+
+import yaml
 
 from composer.commands.validate import cmd_validate
 
@@ -11,6 +13,16 @@ class TestValidateCommand:
 
     def test_validate_all_valid(self, mock_manager, mock_args, capsys):
         """Test validate when all stacks are valid."""
+        with patch.object(Path, 'exists', return_value=True):
+            cmd_validate(mock_manager, mock_args)
+
+        captured = capsys.readouterr()
+        assert "✓ All stacks valid" in captured.out
+
+    def test_validate_single_stack(self, mock_manager, mock_args, capsys):
+        """Test validate when a single stack is valid."""
+        mock_args.target = "test-stack"
+
         with patch.object(Path, 'exists', return_value=True):
             cmd_validate(mock_manager, mock_args)
 
@@ -108,3 +120,24 @@ class TestValidateCommand:
         assert "2 issue(s) found" in captured.out
         assert "test-stack" in captured.out
         assert "autostart-stack" in captured.out
+
+    def test_validate_name_field_mismatch(
+        self, mock_manager, mock_args, capsys
+    ):
+        """Test validate detects name field mismatch in metadata."""
+        # Create metadata with mismatched name
+        metadata_content = yaml.dump({
+            'name': 'wrong-name',
+            'description': 'Test stack',
+            'category': 'test'
+        })
+
+        with patch.object(Path, 'exists', return_value=True):
+            with patch('builtins.open', mock_open(read_data=metadata_content)):
+                cmd_validate(mock_manager, mock_args)
+
+        captured = capsys.readouterr()
+        assert "metadata contains 'name' field" in captured.out
+        assert "wrong-name" in captured.out
+        assert "name is derived from path" in captured.out
+        assert "⚠" in captured.out

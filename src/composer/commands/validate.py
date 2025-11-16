@@ -7,9 +7,14 @@ def cmd_validate(manager: StackManager, args) -> None:
     """Validate all stack metadata."""
     print("Validating stacks...\n")
 
+    if args.target:
+        stacks = (manager.get_stack(args.target),)
+    else:
+        stacks = manager.stacks.values()
+
     issues = []
 
-    for stack in manager.stacks.values():
+    for stack in stacks:
         # Check compose file exists
         if not stack.compose_file.exists():
             issues.append(f"  ✗ {stack.name}: docker-compose.yml not found")

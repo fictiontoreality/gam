@@ -3,7 +3,7 @@ from composer.stack_manager import StackManager
 
 def cmd_status(manager: StackManager, args) -> None:
     """Show status of all stacks."""
-    stacks = manager.list_stacks(category=args.category)
+    stacks = manager.list_stacks(category=args.category, tag=args.tag)
 
     header = f"\n{'Stack':<30} {'Category':<15} {'Status':<10} {'Containers'}"
     print(header)

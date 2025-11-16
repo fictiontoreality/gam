@@ -5,7 +5,7 @@ from composer.stack_manager import StackManager
 
 def cmd_category(manager: StackManager, args) -> None:
     """Category management commands."""
-    if args.category_action == 'list':
+    if args.category_action in ('list', 'ls'):
         categories = manager.get_all_categories()
         if not categories:
             print("No categories found")

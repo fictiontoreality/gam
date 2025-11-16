@@ -26,6 +26,17 @@ def test_category_list_with_subcategories(clean_stacks, capsys):
     assert "test/integration" in captured.out
 
 
+def test_category_ls_alias(clean_stacks, capsys):
+    """Test that 'ls' works as alias for 'list'."""
+    args = Namespace(category_action='ls')
+    cmd_category(clean_stacks, args)
+
+    captured = capsys.readouterr()
+    assert "test" in captured.out
+    assert "production" in captured.out
+    assert "app" in captured.out
+
+
 def test_category_set(clean_stacks, capsys):
     """Test setting category for a stack."""
     args = Namespace(

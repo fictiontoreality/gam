@@ -5,7 +5,7 @@ from composer.stack_manager import StackManager
 
 def cmd_tag(manager: StackManager, args) -> None:
     """Tag management commands."""
-    if args.tag_action == 'list':
+    if args.tag_action in ('list', 'ls'):
         tags = manager.get_all_tags()
         if not tags:
             print("No tags found")

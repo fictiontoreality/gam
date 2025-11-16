@@ -50,6 +50,20 @@ class TestCategoryCommand:
         assert "test/unit" in captured.out
         assert "test/integration" in captured.out
 
+    def test_category_ls_alias(self, mock_manager, mock_args, capsys):
+        """Test that 'ls' works as alias for 'list'."""
+        mock_args.category_action = 'ls'
+        mock_manager.get_all_categories = MagicMock(
+            return_value=[('production', ''), ('development', '')]
+        )
+
+        cmd_category(mock_manager, mock_args)
+
+        captured = capsys.readouterr()
+        assert "Found 2 unique categor" in captured.out
+        assert "production" in captured.out
+        assert "development" in captured.out
+
     def test_category_set(self, mock_manager, mock_args, capsys):
         """Test setting category for a stack."""
         mock_args.category_action = 'set'

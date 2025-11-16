@@ -76,3 +76,22 @@ class TestStatusCommand:
 
         captured = capsys.readouterr()
         assert "○" in captured.out  # Stopped icon
+
+    def test_status_filter_by_tag(self, mock_manager, mock_args, capsys):
+        """Test status filtered by tag."""
+        mock_args.tag = "dev"
+        mock_manager.list_stacks = MagicMock(
+            return_value=[mock_manager.stacks["test-stack"]]
+        )
+        mock_manager.stacks["test-stack"].get_status = MagicMock(
+            return_value={'status': 'running', 'containers': 1, 'running': 1}
+        )
+
+        cmd_status(mock_manager, mock_args)
+
+        # Verify list_stacks was called with tag parameter
+        mock_manager.list_stacks.assert_called_once_with(
+            category=None, tag="dev"
+        )
+        captured = capsys.readouterr()
+        assert "test-stack" in captured.out

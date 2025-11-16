@@ -35,6 +35,20 @@ class TestTagCommand:
         captured = capsys.readouterr()
         assert "No tags found" in captured.out
 
+    def test_tag_ls_alias(self, mock_manager, mock_args, capsys):
+        """Test that 'ls' works as alias for 'list'."""
+        mock_args.tag_action = 'ls'
+        mock_manager.get_all_tags = MagicMock(
+            return_value=['dev', 'prod']
+        )
+
+        cmd_tag(mock_manager, mock_args)
+
+        captured = capsys.readouterr()
+        assert "Found 2 unique tag(s)" in captured.out
+        assert "dev" in captured.out
+        assert "prod" in captured.out
+
     def test_tag_add(self, mock_manager, mock_args, capsys):
         """Test adding tags to a stack."""
         mock_args.tag_action = 'add'
