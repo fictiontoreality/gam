@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from composer.commands.category import cmd_category
+from gam.commands.category import cmd_category
 
 
 class TestCategoryCommand:

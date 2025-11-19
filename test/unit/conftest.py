@@ -1,12 +1,12 @@
-"""Pytest configuration and fixtures for composer tests."""
+"""Pytest configuration and fixtures for gam tests."""
 
 from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
 
-from composer.stack import Stack
-from composer.stack_manager import StackManager
+from gam.stack import Stack
+from gam.stack_manager import StackManager
 
 
 @pytest.fixture

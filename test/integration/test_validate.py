@@ -2,7 +2,7 @@
 
 from argparse import Namespace
 
-from composer.commands.validate import cmd_validate
+from gam.commands.validate import cmd_validate
 
 
 def test_validate_all_stacks_valid(clean_stacks, capsys):

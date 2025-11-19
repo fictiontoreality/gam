@@ -2,8 +2,8 @@
 
 from argparse import Namespace
 
-from composer.commands.restart import cmd_restart
-from composer.commands.up import cmd_up
+from gam.commands.restart import cmd_restart
+from gam.commands.up import cmd_up
 
 
 def test_restart_single_stack(clean_stacks, capsys):

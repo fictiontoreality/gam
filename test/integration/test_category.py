@@ -2,7 +2,7 @@
 
 from argparse import Namespace
 
-from composer.commands.category import cmd_category
+from gam.commands.category import cmd_category
 
 
 def test_category_list(clean_stacks, capsys):

@@ -1,4 +1,5 @@
-# Composer - Docker Compose Stack Manager
+# Gam: 🐳 a social gathering of whales 🐋
+## Docker Compose Stack Manager
 
 A metadata-driven management tool for organizing and controlling multiple Docker Compose stacks.
 
@@ -65,13 +66,13 @@ health_check_url: http://localhost:8080/health
 
 | Field | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
-| **description** | string | No | `""` | Human-readable description. Shown in `composer show` and `composer search`. |
+| **description** | string | No | `""` | Human-readable description. Shown in `gam show` and `gam search`. |
 | **category** | string | No | `"uncategorized"` | Primary category for organization. Used for filtering with `--category` flag. Can be hierarchical (see subcategory). |
 | **subcategory** | string | No | `""` | Secondary category level. Displayed as `category/subcategory`. Used for finer-grained organization. |
-| **tags** | list of strings | No | `[]` | Tags for flexible filtering and searching. Used with `--tag` flag and `composer search`. |
-| **auto_start** | boolean | No | `false` | If `true`, stack will be started by `composer autostart` (e.g., on boot via systemd if configured). |
+| **tags** | list of strings | No | `[]` | Tags for flexible filtering and searching. Used with `--tag` flag and `gam search`. |
+| **auto_start** | boolean | No | `false` | If `true`, stack will be started by `gam autostart` (e.g., on boot via systemd if configured). |
 | **priority** | integer (1-5) | No | `5` | Startup/shutdown priority. `1` = highest priority (starts first, stops last). `5` = lowest priority (starts last, stops first). Used with `--priority` flag. |
-| **depends_on** | list of strings | No | `[]` | List of stack names this stack depends on. When using `composer up <stack> --with-deps`, dependencies are started first in correct order. |
+| **depends_on** | list of strings | No | `[]` | List of stack names this stack depends on. When using `gam up <stack> --with-deps`, dependencies are started first in correct order. |
 | **expected_containers** | integer | No | `0` | Expected number of containers for this stack. Informational hint for monitoring/validation. |
 | **critical** | boolean | No | `false` | Whether this stack is critical for operations. Informational hint for monitoring/alerting. |
 | **owner** | string | No | `""` | Team or person responsible for this stack. Custom field for organization. |
@@ -81,22 +82,22 @@ health_check_url: http://localhost:8080/health
 ### How Fields Are Used
 
 **Organization & Discovery:**
-- `category`, `subcategory`, `tags` - Used by `composer list --category <cat>`, `composer list --tag <tag>`, and `composer search <term>`
-- `description` - Shown in `composer show <stack>` and `composer search` results
+- `category`, `subcategory`, `tags` - Used by `gam list --category <cat>`, `gam list --tag <tag>`, and `gam search <term>`
+- `description` - Shown in `gam show <stack>` and `gam search` results
 - `name` - Primary identifier for all commands
 
 **Lifecycle Management:**
-- `auto_start` - Determines if stack is started by `composer autostart` (typically run on boot)
-- `priority` - Controls startup order when using `composer up --all --priority` (1=first, 5=last). Shutdown order is reversed.
-- `depends_on` - Ensures dependencies start before the stack when using `composer up <stack> --with-deps`
+- `auto_start` - Determines if stack is started by `gam autostart` (typically run on boot)
+- `priority` - Controls startup order when using `gam up --all --priority` (1=first, 5=last). Shutdown order is reversed.
+- `depends_on` - Ensures dependencies start before the stack when using `gam up <stack> --with-deps`
 
 **Metadata Management:**
-- All fields can be modified using `composer tag` and `composer category` commands
+- All fields can be modified using `gam tag` and `gam category` commands
 - Metadata is persisted to `.stack-meta.yaml` when changed via CLI
 - Fields are extensible - add custom fields as needed (they'll be preserved but not used by commands)
 
 **Validation:**
-- `composer validate` checks that:
+- `gam validate` checks that:
   - `docker-compose.yml` exists for each stack
   - Dependencies listed in `depends_on` exist
   - Metadata files are valid YAML
@@ -130,65 +131,65 @@ health_check_url: http://localhost:8080/health
 │   └── blog/
 │       ├── docker-compose.yml
 │       └── .stack-meta.yaml
-└── composer  # Your management script
+└── gam  # Your management script
 ```
 
 ## Usage Examples
 
 ```bash
 # List all stacks
-./composer list
+./gam list
 
 # List stacks in video category
-./composer list --category video
+./gam list --category video
 
 # List stacks with 'production' tag
-./composer list --tag production
+./gam list --tag production
 
 # Show details about a stack
-./composer show video-transcoding
+./gam show video-transcoding
 
 # Start a stack
-./composer up video-transcoding
+./gam up video-transcoding
 
 # Start with dependencies
-./composer up video-transcoding --with-deps
+./gam up video-transcoding --with-deps
 
 # Start all stacks in a category
-./composer up --category video
+./gam up --category video
 
 # Start all stacks by priority
-./composer up --all --priority
+./gam up --all --priority
 
 # Stop a stack
-./composer down video-transcoding
+./gam down video-transcoding
 
 # Stop all in category
-./composer down --category video
+./gam down --category video
 
 # Show status of all stacks
-./composer status
+./gam status
 
 # Search for stacks
-./composer search media
+./gam search media
 
 # Auto-start all configured stacks (e.g., on boot)
-./composer autostart
+./gam autostart
 
 # Validate all metadata
-./composer validate
+./gam validate
 
 # Tag Management
-./composer tag list                              # List all tags
-./composer tag add video-transcoding production   # Add tag(s) to a stack
-./composer tag remove web-blog staging           # Remove tag(s) from a stack
-./composer tag rename production prod             # Rename tag across all stacks
+./gam tag list                              # List all tags
+./gam tag add video-transcoding production   # Add tag(s) to a stack
+./gam tag remove web-blog staging           # Remove tag(s) from a stack
+./gam tag rename production prod             # Rename tag across all stacks
 
 # Category Management
-./composer category list                                    # List all categories
-./composer category set web-blog application frontend       # Set category/subcategory
-./composer category set data-redis database                 # Set category only
-./composer category rename data database                    # Rename category across all stacks
+./gam category list                                    # List all categories
+./gam category set web-blog application frontend       # Set category/subcategory
+./gam category set data-redis database                 # Set category only
+./gam category rename data database                    # Rename category across all stacks
 ```
 
 ## Installation
@@ -197,16 +198,16 @@ Install using pip, pipx, or uv:
 
 ```bash
 # Using pip (system-wide)
-pip install docker-composer
+pip install docker-gam
 
 # Using pipx (isolated environment, recommended)
-pipx install docker-composer
+pipx install docker-gam
 
 # Using uv (fast, modern)
-uv tool install docker-composer
+uv tool install docker-gam
 ```
 
-Once installed, the `composer` command will be available system-wide.
+Once installed, the `gam` command will be available system-wide.
 
 ### Development Installation
 
@@ -214,8 +215,8 @@ For development or local testing:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/composer.git
-cd composer
+git clone https://github.com/yourusername/gam.git
+cd gam
 
 # Install in editable mode
 pip install -e .
@@ -242,17 +243,17 @@ EOF
 
 Alternatively, use the CLI to manage metadata:
 ```bash
-composer tag add video-transcoding media production
-composer category set video-transcoding video processing
+gam tag add video-transcoding media production
+gam category set video-transcoding video processing
 ```
 
 2. **Test it:**
 ```bash
-composer list
-composer show video-transcoding
-composer status
-composer tag list
-composer category list
+gam list
+gam show video-transcoding
+gam status
+gam tag list
+gam category list
 ```
 
 3. **Set up autostart (optional):**
@@ -266,8 +267,8 @@ Requires=docker.service
 
 [Service]
 Type=oneshot
-# Note: Update composer path as needed (`which composer`).
-ExecStart=/usr/local/bin/composer autostart
+# Note: Update gam path as needed (`which gam`).
+ExecStart=/usr/local/bin/gam autostart
 WorkingDirectory=/path/to/your/docker/compose/stacks
 RemainAfterExit=yes
 
@@ -285,7 +286,7 @@ Once you have the basics working, you can add:
 1. **Web UI:** Simple Flask/FastAPI dashboard
 2. **Webhooks:** Trigger from Git commits
 3. **Health checks:** Monitor stack health
-4. **Logs:** `composer logs <stack>`
+4. **Logs:** `gam logs <stack>`
 5. **Export:** Generate reports, integrate with monitoring
-6. **Backup:** `composer backup <stack>` for volumes
+6. **Backup:** `gam backup <stack>` for volumes
 7. **Template generation:** Create new stacks from templates

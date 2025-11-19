@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Composer is a metadata-driven management tool for organizing and controlling multiple Docker Compose stacks. It enables priority-based startup, dependency management, auto-start on boot, and bulk operations across stacks using simple YAML metadata files.
+Gam is a metadata-driven management tool for organizing and controlling multiple Docker Compose stacks. It enables priority-based startup, dependency management, auto-start on boot, and bulk operations across stacks using simple YAML metadata files.
 
 The tool is designed to be non-invasive (doesn't modify docker-compose.yml files), git-friendly (all configuration in YAML), and simple (single Python script with no complex frameworks).
 
@@ -19,36 +19,36 @@ The tool is packaged as a proper Python package and can be installed via pip/pip
 uv pip install -e .
 
 # Run commands (after installation)
-composer ls                     # List all stacks
-composer ls -c video            # Filter by category (shortcut)
-composer ls --category video    # Filter by category (full flag)
-composer ls -t production       # Filter by tag (shortcut)
-composer list                   # Alias for 'ls'
+gam ls                     # List all stacks
+gam ls -c video            # Filter by category (shortcut)
+gam ls --category video    # Filter by category (full flag)
+gam ls -t production       # Filter by tag (shortcut)
+gam list                   # Alias for 'ls'
 
-composer show <stack-name>
+gam show <stack-name>
 
 # Start, stop, restart with filters
-composer up <stack-name>
-composer up -c video            # Start all stacks in category
-composer up -t production       # Start all stacks with tag
-composer up --all               # Start all stacks
+gam up <stack-name>
+gam up -c video            # Start all stacks in category
+gam up -t production       # Start all stacks with tag
+gam up --all               # Start all stacks
 
-composer down <stack-name>
-composer down -c video          # Stop all stacks in category
-composer down -t production     # Stop all stacks with tag
-composer down --all             # Stop all stacks
+gam down <stack-name>
+gam down -c video          # Stop all stacks in category
+gam down -t production     # Stop all stacks with tag
+gam down --all             # Stop all stacks
 
-composer restart <stack-name>
-composer restart -c video       # Restart all stacks in category
-composer restart -t production  # Restart all stacks with tag
-composer restart --all          # Restart all stacks
+gam restart <stack-name>
+gam restart -c video       # Restart all stacks in category
+gam restart -t production  # Restart all stacks with tag
+gam restart --all          # Restart all stacks
 
-composer status
-composer status -c video        # Show status filtered by category
+gam status
+gam status -c video        # Show status filtered by category
 
-composer validate
-composer tag list
-composer category list
+gam validate
+gam tag list
+gam category list
 ```
 
 **Tip**: Use `-c` as a shortcut for `--category` and `-t` as a shortcut for `--tag`.
@@ -56,7 +56,7 @@ composer category list
 Alternatively, run directly from source:
 
 ```bash
-python -m composer.cli list
+python -m gam.cli list
 ```
 
 ### Testing
@@ -72,7 +72,7 @@ uv pip install -e ".[test]"
 uv run pytest
 
 # Run with coverage report
-uv run pytest --cov=src/composer --cov-report=term-missing
+uv run pytest --cov=src/gam --cov-report=term-missing
 
 # Run specific test file
 uv run pytest test/unit/test_ls.py
@@ -106,12 +106,12 @@ When testing changes manually:
 The project follows modern Python packaging conventions:
 
 ```
-composer/
+gam/
 ├── pyproject.toml          # Package metadata and dependencies
 ├── README.md               # User documentation
 ├── CLAUDE.md              # Developer documentation
 └── src/
-    └── composer/
+    └── gam/
         ├── __init__.py         # Package initialization
         ├── cli.py              # Main CLI implementation and argument parsing
         ├── stack.py            # Stack dataclass with metadata operations
@@ -131,7 +131,7 @@ composer/
             └── category.py
 ```
 
-**Entry Points**: The package defines a console script entry point `composer` that maps to `composer.cli:main`, making the command available system-wide after installation.
+**Entry Points**: The package defines a console script entry point `gam` that maps to `gam.cli:main`, making the command available system-wide after installation.
 
 ## Architecture
 
@@ -256,7 +256,7 @@ When working with this codebase, follow these conventions:
   1. Standard library imports
   2. Third-party library imports (e.g., `yaml`)
   3. Local application imports
-- **Absolute imports** for parent-level modules: Use `from composer.module import Class` (not `from ..module import Class`)
+- **Absolute imports** for parent-level modules: Use `from gam.module import Class` (not `from ..module import Class`)
 - **Relative imports** only for immediate siblings within the same package
 - Example:
   ```python
@@ -267,7 +267,7 @@ When working with this codebase, follow these conventions:
 
   import yaml
 
-  from composer.stack_manager import StackManager
+  from gam.stack_manager import StackManager
   ```
 
 ### YAML Formatting
@@ -276,7 +276,7 @@ When working with this codebase, follow these conventions:
 - This ensures consistent, readable YAML output across all generated files
 
 ### Module Organization
-- **Command implementations** are organized in individual files under `src/composer/commands/`
+- **Command implementations** are organized in individual files under `src/gam/commands/`
 - Each command file contains a single `cmd_*` function that implements the command logic
 - Command files do NOT have module-level docstrings (the folder structure and function name make the purpose clear)
 

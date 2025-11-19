@@ -1,24 +1,24 @@
 #! /usr/bin/env python3
 """
-composer - Docker Compose Stack Manager with Metadata Support
+gam - Docker Compose Stack Manager with Metadata Support
 
 Usage:
-    composer autostart
-    composer category list
-    composer category rename <old-category> <new-category>
-    composer category set <stack> <category> [subcategory]
-    composer down <stack|--all> [-c CAT] [-t TAG]
-    composer ls [-c|--category=CAT] [-t|--tag=TAG]
-    composer restart <stack|--all> [-c CAT] [-t TAG]
-    composer search <term>
-    composer show <stack>
-    composer status [-c|--category=CAT] [-t|--tag=TAG]
-    composer tag add <stack> <tag> [<tag> ...]
-    composer tag ls
-    composer tag remove <stack> <tag> [<tag> ...]
-    composer tag rename <old-tag> <new-tag>
-    composer up <stack|--all> [-c CAT] [-t TAG] [--priority]
-    composer validate [<stack>]
+    gam autostart
+    gam category list
+    gam category rename <old-category> <new-category>
+    gam category set <stack> <category> [subcategory]
+    gam down <stack|--all> [-c CAT] [-t TAG]
+    gam ls [-c|--category=CAT] [-t|--tag=TAG]
+    gam restart <stack|--all> [-c CAT] [-t TAG]
+    gam search <term>
+    gam show <stack>
+    gam status [-c|--category=CAT] [-t|--tag=TAG]
+    gam tag add <stack> <tag> [<tag> ...]
+    gam tag ls
+    gam tag remove <stack> <tag> [<tag> ...]
+    gam tag rename <old-tag> <new-tag>
+    gam up <stack|--all> [-c CAT] [-t TAG] [--priority]
+    gam validate [<stack>]
 """
 
 import argparse

@@ -2,7 +2,7 @@
 
 from argparse import Namespace
 
-from composer.commands.tag import cmd_tag
+from gam.commands.tag import cmd_tag
 
 
 def test_tag_list(clean_stacks, capsys):

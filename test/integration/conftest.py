@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from composer.stack_manager import StackManager
+from gam.stack_manager import StackManager
 
 
 @pytest.fixture(scope="session")

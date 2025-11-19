@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from composer.commands.down import cmd_down
+from gam.commands.down import cmd_down
 
 
 class TestDownCommand:

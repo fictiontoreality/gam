@@ -4,7 +4,7 @@ from argparse import Namespace
 
 import pytest
 
-from composer.commands.show import cmd_show
+from gam.commands.show import cmd_show
 
 
 def test_show_displays_stack_details(clean_stacks, capsys):

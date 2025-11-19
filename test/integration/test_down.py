@@ -2,8 +2,8 @@
 
 from argparse import Namespace
 
-from composer.commands.down import cmd_down
-from composer.commands.up import cmd_up
+from gam.commands.down import cmd_down
+from gam.commands.up import cmd_up
 
 
 def test_down_single_stack(clean_stacks, capsys):

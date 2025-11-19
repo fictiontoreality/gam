@@ -3,7 +3,7 @@
 from argparse import Namespace
 import time
 
-from composer.commands.up import cmd_up
+from gam.commands.up import cmd_up
 
 
 def test_up_single_stack(clean_stacks, capsys):

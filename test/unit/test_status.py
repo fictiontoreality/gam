@@ -2,7 +2,7 @@
 
 from unittest.mock import MagicMock
 
-from composer.commands.status import cmd_status
+from gam.commands.status import cmd_status
 
 
 class TestStatusCommand:

@@ -1,6 +1,6 @@
 import sys
 
-from composer.stack_manager import StackManager
+from gam.stack_manager import StackManager
 
 
 def cmd_show(manager: StackManager, args) -> None:

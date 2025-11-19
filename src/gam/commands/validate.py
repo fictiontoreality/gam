@@ -1,6 +1,6 @@
 import yaml
 
-from composer.stack_manager import StackManager
+from gam.stack_manager import StackManager
 
 
 def cmd_validate(manager: StackManager, args) -> None:

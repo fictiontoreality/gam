@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from composer.commands.ls import cmd_ls
+from gam.commands.ls import cmd_ls
 
 
 class TestLsCommand:

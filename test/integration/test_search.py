@@ -2,7 +2,7 @@
 
 from argparse import Namespace
 
-from composer.commands.search import cmd_search
+from gam.commands.search import cmd_search
 
 
 def test_search_finds_stacks_by_name(clean_stacks, capsys):

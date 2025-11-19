@@ -2,7 +2,7 @@
 
 from argparse import Namespace
 
-from composer.commands.ls import cmd_ls
+from gam.commands.ls import cmd_ls
 
 
 def test_ls_lists_all_stacks(clean_stacks, capsys):

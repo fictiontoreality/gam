@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from composer.commands.show import cmd_show
+from gam.commands.show import cmd_show
 
 
 class TestShowCommand:

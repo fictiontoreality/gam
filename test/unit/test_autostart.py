@@ -2,7 +2,7 @@
 
 from unittest.mock import MagicMock
 
-from composer.commands.autostart import cmd_autostart
+from gam.commands.autostart import cmd_autostart
 
 
 class TestAutostartCommand:

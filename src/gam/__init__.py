@@ -1,4 +1,4 @@
-"""Composer - Docker Compose Stack Manager
+"""Gam - Docker Compose Stack Manager
 
 A metadata-driven management tool for organizing and controlling multiple Docker
 Compose stacks.

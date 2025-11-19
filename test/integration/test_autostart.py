@@ -2,7 +2,7 @@
 
 from argparse import Namespace
 
-from composer.commands.autostart import cmd_autostart
+from gam.commands.autostart import cmd_autostart
 
 
 def test_autostart_starts_configured_stacks(clean_stacks, capsys):

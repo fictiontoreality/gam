@@ -2,7 +2,7 @@
 
 from argparse import Namespace
 
-from composer.commands.status import cmd_status
+from gam.commands.status import cmd_status
 
 
 def test_status_shows_all_stacks(clean_stacks, capsys):

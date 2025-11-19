@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, mock_open, patch
 
 import yaml
 
-from composer.commands.validate import cmd_validate
+from gam.commands.validate import cmd_validate
 
 
 class TestValidateCommand:

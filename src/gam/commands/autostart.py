@@ -1,4 +1,4 @@
-from composer.stack_manager import StackManager
+from gam.stack_manager import StackManager
 
 
 def cmd_autostart(manager: StackManager, args) -> None:

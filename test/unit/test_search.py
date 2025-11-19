@@ -2,7 +2,7 @@
 
 from unittest.mock import MagicMock
 
-from composer.commands.search import cmd_search
+from gam.commands.search import cmd_search
 
 
 class TestSearchCommand:

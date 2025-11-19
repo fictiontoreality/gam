@@ -1,4 +1,4 @@
-"""Command handlers for composer CLI."""
+"""Command handlers for gam CLI."""
 
 from .autostart import cmd_autostart
 from .category import cmd_category

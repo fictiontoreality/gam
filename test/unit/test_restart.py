@@ -2,7 +2,7 @@
 
 from unittest.mock import MagicMock
 
-from composer.commands.restart import cmd_restart
+from gam.commands.restart import cmd_restart
 
 
 class TestRestartCommand:

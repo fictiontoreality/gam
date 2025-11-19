@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from composer.stack import Stack
+from gam.stack import Stack
 
 class StackManager:
     """Manages all Docker Compose stacks."""

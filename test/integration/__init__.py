@@ -1,1 +1,1 @@
-"""Integration tests for Composer."""
+"""Integration tests for Gam."""

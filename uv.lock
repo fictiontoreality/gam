@@ -116,7 +116,7 @@ toml = [
 ]
 
 [[package]]
-name = "docker-composer"
+name = "docker-gam"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

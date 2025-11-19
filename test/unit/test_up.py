@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from composer.commands.up import cmd_up
+from gam.commands.up import cmd_up
 
 
 class TestUpCommand:

@@ -1,1 +1,1 @@
-"""Unit tests for composer."""
+"""Unit tests for gam."""

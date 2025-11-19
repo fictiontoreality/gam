@@ -1,1 +1,1 @@
-"""Test package for composer."""
+"""Test package for gam."""
