@@ -8,6 +8,8 @@ Usage:
     gam category rename <old-category> <new-category>
     gam category set <stack> <category> [subcategory]
     gam down <stack|--all> [-c CAT] [-t TAG]
+    gam logs [stack...] [--all] [-c CAT] [-t TAG] [-f] [--since TIME]
+             [-n NUM] [-T] [--until TIME]
     gam ls [-c|--category=CAT] [-t|--tag=TAG]
     gam restart <stack|--all> [-c CAT] [-t TAG]
     gam search <term>
@@ -28,6 +30,7 @@ from .commands import (
     cmd_autostart,
     cmd_category,
     cmd_down,
+    cmd_logs,
     cmd_ls,
     cmd_restart,
     cmd_search,
@@ -98,6 +101,36 @@ def main():
     )
     down_parser.add_argument(
         '-t', '--tag', help='Stop all stacks with tag'
+    )
+
+    # logs
+    logs_parser = subparsers.add_parser('logs', help='View stack logs')
+    logs_parser.add_argument(
+        'stacks', nargs='*', help='Stack name(s) to show logs for'
+    )
+    logs_parser.add_argument(
+        '--all', action='store_true', help='Show logs from all stacks'
+    )
+    logs_parser.add_argument(
+        '-c', '--category', help='Show logs from stacks in category'
+    )
+    logs_parser.add_argument(
+        '-t', '--tag', help='Show logs from stacks with tag'
+    )
+    logs_parser.add_argument(
+        '-f', '--follow', action='store_true', help='Follow log output'
+    )
+    logs_parser.add_argument(
+        '--since', help='Show logs since timestamp'
+    )
+    logs_parser.add_argument(
+        '-n', '--tail', help='Number of lines to show from end'
+    )
+    logs_parser.add_argument(
+        '-T', '--timestamps', action='store_true', help='Show timestamps'
+    )
+    logs_parser.add_argument(
+        '--until', help='Show logs before timestamp'
     )
 
     # ls (with 'list' alias)
@@ -218,6 +251,7 @@ def main():
         'cat': cmd_category, # Alias for category
         'down': cmd_down,
         'list': cmd_ls,  # Alias for ls
+        'logs': cmd_logs,
         'ls': cmd_ls,
         'restart': cmd_restart,
         'search': cmd_search,

@@ -3,6 +3,7 @@
 from .autostart import cmd_autostart
 from .category import cmd_category
 from .down import cmd_down
+from .logs import cmd_logs
 from .ls import cmd_ls
 from .restart import cmd_restart
 from .search import cmd_search
@@ -16,6 +17,7 @@ __all__ = [
     'cmd_autostart',
     'cmd_category',
     'cmd_down',
+    'cmd_logs',
     'cmd_ls',
     'cmd_restart',
     'cmd_search',
